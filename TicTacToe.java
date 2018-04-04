@@ -2,6 +2,7 @@ package com.rockingstar.modules.TicTacToe;
 
 import com.rockingstar.engine.game.AbstractGame;
 
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -22,6 +23,11 @@ public class TicTacToe extends AbstractGame {
     private Cell[][] cell = new Cell[3][3];
 
     private Label status = new Label("X's turn to play");
+
+    @Override
+    public Node getView() {
+        return null;
+    }
 
     public void start(Stage primaryStage) {
 
