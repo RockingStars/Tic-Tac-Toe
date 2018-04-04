@@ -1,4 +1,7 @@
-import javafx.application.Application;
+package com.rockingstar.modules.TicTacToe;
+
+import com.rockingstar.engine.game.AbstractGame;
+
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -12,15 +15,14 @@ import javafx.geometry.Pos;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 
-public class TTT extends Application {
+public class TicTacToe extends AbstractGame {
 
     private char whoseTurn = 'X';
 
-    private Cell[][] cell =  new Cell[3][3];
+    private Cell[][] cell = new Cell[3][3];
 
     private Label status = new Label("X's turn to play");
 
-    @Override
     public void start(Stage primaryStage) {
 
         Button end = new Button("Exit");
@@ -152,11 +154,11 @@ public class TTT extends Application {
                 // Check game status
                 if (hasWon(whoseTurn)) {
                     status.setText(whoseTurn + " won! Do you want to play again?");
-                    whoseTurn = ' '; // Game is over
+                    whoseTurn = ' '; // AbstractGame is over
                 }
                 else if (isFull()) {
                     status.setText("Draw! Do you want to play again?");
-                    whoseTurn = ' '; // Game is over
+                    whoseTurn = ' '; // AbstractGame is over
                 }
                 else {
                     // Change the turn
@@ -166,13 +168,5 @@ public class TTT extends Application {
                 }
             }
         }
-    }
-
-    /**
-     * The main method is only needed for the IDE with limited
-     * JavaFX support. Not needed for running from the command line.
-     */
-    public static void main(String[] args) {
-        launch(args);
     }
 }
