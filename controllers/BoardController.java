@@ -1,16 +1,15 @@
-package Controllers;
+package com.rockingstar.modules.TicTacToe.controllers;
 
+import com.rockingstar.modules.TicTacToe.models.Cell;
 import javafx.geometry.Insets;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import Models.*;
 
-public class CellController extends CellModel{
+public class BoardController {
 
-    public TTTModel TTTM = new TTTModel();
-    public TTTController TTTC = new TTTController();
-    
+    private Cell[][] _cells = new Cell[3][3];
+    /*
     public char getToken() {
         return token;
     }
@@ -55,5 +54,14 @@ public class CellController extends CellModel{
                 TTTM.status.setText(TTTM.whoseTurn + "'s turn.");
             }
         }
+    }*/
+
+    public  boolean isFull() {
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                if (_cells[i][j].getPlayer() == null)
+                    return false;
+
+        return true;
     }
 }
