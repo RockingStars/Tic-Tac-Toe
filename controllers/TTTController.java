@@ -16,6 +16,9 @@ public class TTTController extends AbstractGame {
     public TTTController(Player player1, Player player2) {
         super(player1, player2);
 
+        player1.setCharacter('x');
+        player2.setCharacter('o');
+
         _model = new TTTModel();
         _view = new TTTView(this);
 
@@ -36,8 +39,10 @@ public class TTTController extends AbstractGame {
     public void doPlayerMove(int x, int y) {
         if (_model.isValidMove(x, y)) {
             _model.setPlayerAtPosition(currentPlayer, x, y);
+            _view.setCellImage(x, y);
             switchPlayers();
-            _view.generateBoardVisual();
         }
+        else
+            System.out.println("Invalid move");
     }
 }

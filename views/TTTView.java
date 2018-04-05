@@ -58,49 +58,51 @@ public class TTTView {
     }
 
     public void generateBoardVisual() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                String fileName;
-                ImageView imageView = new ImageView();
-
-                try {
-                    if (_board[i][j] != null) {
-                        switch (_board[i][j].getCharacter()) {
-                            case 'x':
-                                fileName = "x.gif";
-                                break;
-                            case 'o':
-                                fileName = "o.gif";
-                                break;
-                            default:
-                                fileName = null;
-                        }
-
-                        if (fileName != null)
-                            imageView.setImage(new Image(getClass().getClassLoader().getResource("com/rockingstar/modules/TicTacToe/" + fileName).toURI().toString()));
-                    }
-                    else
-                        imageView.setImage(new Image(getClass().getClassLoader().getResource("com/rockingstar/modules/TicTacToe/empty.png").toURI().toString()));
-                }
-
-                catch (URISyntaxException | NullPointerException e) {
-                    Util.exit("Loading TicTacToe images");
-                }
-
-                if (_board[i][j] == null) {
-                    final int tempX = i;
-                    final int tempY = j;
-
-                    imageView.setOnMouseClicked(e -> _controller.doPlayerMove(tempX, tempY));
-                }
-
-                _pane.add(imageView, j, i);
-            }
-        }
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                setCellImage(i, j);
     }
 
     public Button getEndButton() {
         return _endButton;
+    }
+
+    public void setCellImage(int x, int y) {
+        String fileName;
+        ImageView imageView = new ImageView();
+
+        try {
+            if (_board[x][y] != null) {
+                switch (_board[x][y].getCharacter()) {
+                    case 'x':
+                        fileName = "x.gif";
+                        break;
+                    case 'o':
+                        fileName = "o.gif";
+                        break;
+                    default:
+                        fileName = null;
+                }
+
+                if (fileName != null)
+                    imageView.setImage(new Image(getClass().getClassLoader().getResource("com/rockingstar/modules/TicTacToe/" + fileName).toURI().toString()));
+            }
+            else
+                imageView.setImage(new Image(getClass().getClassLoader().getResource("com/rockingstar/modules/TicTacToe/empty.png").toURI().toString()));
+        }
+
+        catch (URISyntaxException | NullPointerException e) {
+            Util.exit("Loading TicTacToe images");
+        }
+
+        if (_board[x][y] == null) {
+            final int tempX = x;
+            final int tempY = y;
+
+            imageView.setOnMouseClicked(e -> _controller.doPlayerMove(tempX, tempY));
+        }
+
+        _pane.add(imageView, x, y);
     }
 
     public Button getNewGameButton() {
