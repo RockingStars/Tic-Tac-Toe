@@ -1,14 +1,10 @@
 package com.rockingstar.modules.TicTacToe.controllers;
 
-import com.rockingstar.modules.TicTacToe.models.Cell;
-import javafx.geometry.Insets;
-import javafx.scene.image.ImageView;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
+import com.rockingstar.engine.game.models.Player;
 
 public class BoardController {
 
-    private Cell[][] _cells = new Cell[3][3];
+    private Player[][] _cells = new Player[3][3];
     /*
     public char getToken() {
         return token;
@@ -59,7 +55,7 @@ public class BoardController {
     public  boolean isFull() {
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
-                if (_cells[i][j].getPlayer() == null)
+                if (_cells[i][j] == null)
                     return false;
 
         return true;

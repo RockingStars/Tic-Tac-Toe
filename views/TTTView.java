@@ -1,15 +1,20 @@
 package com.rockingstar.modules.TicTacToe.views;
 
-import com.rockingstar.modules.TicTacToe.models.Cell;
+import com.rockingstar.engine.game.models.Player;
+import com.rockingstar.engine.io.models.Util;
+import com.rockingstar.modules.TicTacToe.controllers.TTTController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.shape.Rectangle;
+
+import java.net.URISyntaxException;
 
 public class TTTView {
 
@@ -20,13 +25,16 @@ public class TTTView {
 
     private GridPane _pane;
 
-    private Cell[][] _board;
+    private Player[][] _board;
     private HBox _buttons;
 
     private Label _status;
 
-    public TTTView() {
+    private TTTController _controller;
+
+    public TTTView(TTTController controller) {
         _borderPane = new BorderPane();
+        _controller = controller;
         setup();
     }
 
@@ -35,6 +43,8 @@ public class TTTView {
         _newGameButton = new Button("New game");
 
         _pane = new GridPane();
+        _pane.setAlignment(Pos.CENTER);
+        _pane.setPadding(new Insets(20));
 
         _buttons = new HBox();
         _buttons.setSpacing(60.0);
@@ -48,10 +58,45 @@ public class TTTView {
     }
 
     public void generateBoardVisual() {
-        for (int i = 0; i < 3; i++)
-            for (int j = 0; j < 3; j++)
-                //_pane.add(_board[i][j] = new Cell(), j, i);
-                _pane.add(new Rectangle(20, 20), j, i);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                String fileName;
+                ImageView imageView = new ImageView();
+
+                try {
+                    if (_board[i][j] != null) {
+                        switch (_board[i][j].getCharacter()) {
+                            case 'x':
+                                fileName = "x.gif";
+                                break;
+                            case 'o':
+                                fileName = "o.gif";
+                                break;
+                            default:
+                                fileName = null;
+                        }
+
+                        if (fileName != null)
+                            imageView.setImage(new Image(getClass().getClassLoader().getResource("com/rockingstar/modules/TicTacToe/" + fileName).toURI().toString()));
+                    }
+                    else
+                        imageView.setImage(new Image(getClass().getClassLoader().getResource("com/rockingstar/modules/TicTacToe/empty.png").toURI().toString()));
+                }
+
+                catch (URISyntaxException | NullPointerException e) {
+                    Util.exit("Loading TicTacToe images");
+                }
+
+                if (_board[i][j] == null) {
+                    final int tempX = i;
+                    final int tempY = j;
+
+                    imageView.setOnMouseClicked(e -> _controller.doPlayerMove(tempX, tempY));
+                }
+
+                _pane.add(imageView, j, i);
+            }
+        }
     }
 
     public Button getEndButton() {
@@ -66,7 +111,7 @@ public class TTTView {
         return _borderPane;
     }
 
-    public void setBoard(Cell[][] board) {
+    public void setBoard(Player[][] board) {
         _board = board;
     }
 
