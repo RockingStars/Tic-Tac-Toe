@@ -5,7 +5,6 @@ import com.rockingstar.engine.game.models.Player;
 import com.rockingstar.modules.TicTacToe.models.TTTModel;
 import com.rockingstar.modules.TicTacToe.views.TTTView;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 
 public class TTTController extends AbstractGame {
 
