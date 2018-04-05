@@ -5,6 +5,7 @@ import com.rockingstar.engine.game.models.Player;
 import com.rockingstar.modules.TicTacToe.models.TTTModel;
 import com.rockingstar.modules.TicTacToe.views.TTTView;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 
 public class TTTController extends AbstractGame {
 
@@ -19,15 +20,17 @@ public class TTTController extends AbstractGame {
         player1.setCharacter('x');
         player2.setCharacter('o');
 
-        _model = new TTTModel();
         _view = new TTTView(this);
+        _model = new TTTModel(_view);
 
         _board = _model.getBoard();
-        _model.addEventHandlers(_view);
+        _model.addEventHandlers();
         _model.createCells();
 
         _view.setBoard(_model.getBoard());
         _view.generateBoardVisual();
+
+        _view.setStatus(_model.getTurnMessage(currentPlayer));
     }
 
     @Override
@@ -40,9 +43,22 @@ public class TTTController extends AbstractGame {
         if (_model.isValidMove(x, y)) {
             _model.setPlayerAtPosition(currentPlayer, x, y);
             _view.setCellImage(x, y);
+
+            if (_model.hasWon(currentPlayer)) {
+                _view.setStatus("Player " + currentPlayer.getUsername() + " has won! Congratulations.");
+                _view.setIsFinished(true);
+                return;
+            }
+            else if (_model.isFull()) {
+                _view.setStatus("Neither player has won. Too bad.");
+                _view.setIsFinished(true);
+                return;
+            }
+
             switchPlayers();
+            _view.setStatus(_model.getTurnMessage(currentPlayer));
         }
         else
-            System.out.println("Invalid move");
+            _view.setStatus("Invalid move");
     }
 }

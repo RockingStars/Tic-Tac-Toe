@@ -3,6 +3,7 @@ package com.rockingstar.modules.TicTacToe.views;
 import com.rockingstar.engine.game.models.Player;
 import com.rockingstar.engine.io.models.Util;
 import com.rockingstar.modules.TicTacToe.controllers.TTTController;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -10,9 +11,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 
 import java.net.URISyntaxException;
 
@@ -32,9 +35,17 @@ public class TTTView {
 
     private TTTController _controller;
 
+    private boolean _isFinished;
+
     public TTTView(TTTController controller) {
         _borderPane = new BorderPane();
         _controller = controller;
+
+        _status = new Label();
+        _status.setFont(new Font(16));
+
+        _isFinished = false;
+
         setup();
     }
 
@@ -53,11 +64,13 @@ public class TTTView {
         _buttons.getChildren().addAll(_newGameButton, _endButton);
 
         _borderPane.setCenter(_pane);
-        _borderPane.setTop(_buttons);
-        _borderPane.setBottom(_status);
+        _borderPane.setBottom(_buttons);
+        _borderPane.setTop(_status);
     }
 
     public void generateBoardVisual() {
+        _pane.getChildren().clear();
+
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
                 setCellImage(i, j);
@@ -99,7 +112,16 @@ public class TTTView {
             final int tempX = x;
             final int tempY = y;
 
-            imageView.setOnMouseClicked(e -> _controller.doPlayerMove(tempX, tempY));
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (!_isFinished) {
+                        imageView.setImage(null);
+                        _controller.doPlayerMove(tempX, tempY);
+                        imageView.removeEventFilter(MouseEvent.MOUSE_CLICKED, this);
+                    }
+                }
+            });
         }
 
         _pane.add(imageView, x, y);
@@ -117,7 +139,11 @@ public class TTTView {
         _board = board;
     }
 
-    public void setStatus(Label status) {
-        _status = status;
+    public void setStatus(String status) {
+        _status.setText(status);
+    }
+
+    public void setIsFinished(boolean isFinished) {
+        _isFinished = isFinished;
     }
 }

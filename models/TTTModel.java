@@ -7,23 +7,25 @@ import javafx.application.Platform;
 
 public class TTTModel {
 
-    public char whoseTurn = 'X';
-
     public Player[][] cell = new Player[3][3];
+    private TTTView _view;
 
-    public Label status = new Label("X's turn to play");
+    public TTTModel(TTTView view) {
+        _view = view;
+    }
 
-    public void addEventHandlers(TTTView view) {
-        view.getEndButton().setOnAction(e -> Platform.exit());
-        view.getNewGameButton().setOnAction(e -> {
-            cell = new Player[3][3];
-            createCells();
+    public void addEventHandlers() {
+        _view.getEndButton().setOnAction(e -> Platform.exit());
+        _view.getNewGameButton().setOnAction(e -> clearBoard());
+    }
 
-            status.setText(whoseTurn + "'s turn.");
+    public void clearBoard() {
+        cell = new Player[3][3];
+        createCells();
 
-            view.setBoard(cell);
-            view.generateBoardVisual();
-        });
+        _view.setBoard(cell);
+        _view.generateBoardVisual();
+        _view.setIsFinished(false);
     }
 
     public void createCells() {
@@ -75,5 +77,18 @@ public class TTTModel {
         }
 
         return false;
+    }
+
+    public boolean isFull() {
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                if (cell[i][j] == null)
+                    return false;
+
+        return true;
+    }
+
+    public String getTurnMessage(Player player) {
+        return player.getUsername() + ", it's your turn";
     }
 }
