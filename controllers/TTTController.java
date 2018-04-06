@@ -44,7 +44,7 @@ public class TTTController extends AbstractGame {
     public void doPlayerMove(int x, int y) {
         if (_model.isValidMove(x, y)) {
             if (currentPlayer == player1) {
-                CommandExecutor.execute(new MoveCommand(ServerConnection.getInstance(), x * y));
+                CommandExecutor.execute(new MoveCommand(ServerConnection.getInstance(), y * 3 + x));
                 // @todo Error handling
             }
 
@@ -61,8 +61,6 @@ public class TTTController extends AbstractGame {
                 _view.setIsFinished(true);
                 return;
             }
-
-            _view.setStatus(_model.getTurnMessage(currentPlayer));
         }
         else
             _view.setStatus("Invalid move");
