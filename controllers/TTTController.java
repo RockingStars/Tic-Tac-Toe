@@ -62,7 +62,6 @@ public class TTTController extends AbstractGame {
                 return;
             }
 
-            switchPlayers();
             _view.setStatus(_model.getTurnMessage(currentPlayer));
         }
         else
