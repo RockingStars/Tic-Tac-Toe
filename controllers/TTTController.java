@@ -1,5 +1,8 @@
 package com.rockingstar.modules.TicTacToe.controllers;
 
+import com.rockingstar.engine.ServerConnection;
+import com.rockingstar.engine.command.client.CommandExecutor;
+import com.rockingstar.engine.command.client.MoveCommand;
 import com.rockingstar.engine.game.AbstractGame;
 import com.rockingstar.engine.game.Player;
 import com.rockingstar.modules.TicTacToe.models.TTTModel;
@@ -40,6 +43,11 @@ public class TTTController extends AbstractGame {
     @Override
     public void doPlayerMove(int x, int y) {
         if (_model.isValidMove(x, y)) {
+            if (currentPlayer == player1) {
+                CommandExecutor.execute(new MoveCommand(ServerConnection.getInstance(), x * y));
+                // @todo Error handling
+            }
+
             _model.setPlayerAtPosition(currentPlayer, x, y);
             _view.setCellImage(x, y);
 
@@ -59,5 +67,10 @@ public class TTTController extends AbstractGame {
         }
         else
             _view.setStatus("Invalid move");
+    }
+
+    @Override
+    public void doPlayerMove(int position) {
+        doPlayerMove(position / 3, position % 3);
     }
 }
