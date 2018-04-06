@@ -1,6 +1,6 @@
 package com.rockingstar.modules.TicTacToe.models;
 
-import com.rockingstar.engine.game.models.Player;
+import com.rockingstar.engine.game.Player;
 import com.rockingstar.modules.TicTacToe.views.TTTView;
 import javafx.application.Platform;
 

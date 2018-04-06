@@ -1,7 +1,7 @@
 package com.rockingstar.modules.TicTacToe.controllers;
 
 import com.rockingstar.engine.game.AbstractGame;
-import com.rockingstar.engine.game.models.Player;
+import com.rockingstar.engine.game.Player;
 import com.rockingstar.modules.TicTacToe.models.TTTModel;
 import com.rockingstar.modules.TicTacToe.views.TTTView;
 import javafx.scene.Node;
