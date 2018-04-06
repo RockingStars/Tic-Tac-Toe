@@ -19,8 +19,8 @@ public class TTTController extends AbstractGame {
     public TTTController(Player player1, Player player2) {
         super(player1, player2);
 
-        player1.setCharacter('x');
-        player2.setCharacter('o');
+        this.player1.setCharacter('x');
+        this.player2.setCharacter('o');
 
         _view = new TTTView(this);
         _model = new TTTModel(_view);
