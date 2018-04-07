@@ -7,7 +7,11 @@ import com.rockingstar.engine.game.AbstractGame;
 import com.rockingstar.engine.game.Player;
 import com.rockingstar.modules.TicTacToe.models.TTTModel;
 import com.rockingstar.modules.TicTacToe.views.TTTView;
+import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+
 import java.util.Random;
 
 public class TTTController extends AbstractGame {
@@ -54,27 +58,12 @@ public class TTTController extends AbstractGame {
                 }
             } else
                 _view.setErrorStatus("Invalid move");
+        } else{
+            gameEnded();
         }
-
-        if (_model.isValidMove(x, y)) {
-            if (yourTurn) {
-                CommandExecutor.execute(new MoveCommand(ServerConnection.getInstance(), y * 3 + x));
-                _model.setPlayerAtPosition(currentPlayer, x, y);
-                _view.setCellImage(x, y);
-                yourTurn = false;
-                setCurrentPlayer(1);
-            }
-            else {
-                _view.setErrorStatus("It's not your turn");
-            }
-
-        }
-        else
-            _view.setErrorStatus("Invalid move");
-
-        if (currentPlayer == player2) {
+        /*if (currentPlayer == player2) {
             randomGenerator();
-        }
+        }*/
     }
     public void randomGenerator() {
         Random rand = new Random();
@@ -120,13 +109,35 @@ public class TTTController extends AbstractGame {
             _view.setIsFinished(true);
             return true;
         }
-        else if (_model.isFull()) {
-            _view.setStatus("Neither player has won. Too bad.");
-            _view.setIsFinished(true);
+        else if(_model.isFull()){
             return true;
-        } else{
+        } else {
             return false;
         }
+    }
+
+    public void gameEnded(){
+        super.gameEnded();
+        _view.setIsFinished(true);
+        if(!_model.isFull()) {
+            _view.setStatus("Player " + currentPlayer.getUsername() + " has won! Congratulations.");
+        } else {
+            _view.setStatus("It's a draw! N00bs");
+        }
+
+        Platform.runLater(() -> {
+            Alert returnToLobby = new Alert(Alert.AlertType.CONFIRMATION);
+            returnToLobby.setTitle("Game ended!");
+            returnToLobby.setHeaderText(null);
+            returnToLobby.setContentText("Do you want to return to the lobby?");
+
+            returnToLobby.showAndWait();
+
+            if (returnToLobby.getResult() == ButtonType.OK) {
+                System.out.println("go to lobby....");
+            }
+        });
+
     }
 
 
