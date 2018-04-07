@@ -40,41 +40,35 @@ public class TTTController extends AbstractGame {
 
     @Override
     public void doPlayerMove(int x, int y) {
-        if (_model.hasWon(currentPlayer)) {
-            _view.setStatus("Player " + currentPlayer.getUsername() + " has won! Congratulations.");
-            _view.setIsFinished(true);
-            return;
+        if (!gameFinished()) {
+            if (_model.isValidMove(x, y)) {
+                if (yourTurn) {
+                    CommandExecutor.execute(new MoveCommand(ServerConnection.getInstance(), y * 3 + x));
+                    _model.setPlayerAtPosition(currentPlayer, x, y);
+                    _view.setCellImage(x, y);
+                    yourTurn = false;
+                    setCurrentPlayer(1);
+                } else {
+                    _view.setErrorStatus("It's not your turn");
+                }
+            } else
+                _view.setErrorStatus("Invalid move");
         }
-        else if (_model.isFull()) {
-            _view.setStatus("Neither player has won. Too bad.");
-            _view.setIsFinished(true);
-            return;
-        }
-
-        if (_model.isValidMove(x, y)) {
-            if (yourTurn) {
-                CommandExecutor.execute(new MoveCommand(ServerConnection.getInstance(), y * 3 + x));
-                _model.setPlayerAtPosition(currentPlayer, x, y);
-                _view.setCellImage(x, y);
-                yourTurn = false;
-                setCurrentPlayer(1);
-            }
-            else {
-                _view.setErrorStatus("It's not your turn");
-            }
-        }
-        else
-            _view.setErrorStatus("Invalid move");
     }
 
     @Override
     public void doPlayerMove(int position) {
-        int x = position / 3;
-        int y = position % 3;
+        if (!gameFinished()) {
+            if (yourTurn) {
+                return;
+            }
+            int x = position % 3;
+            int y = position / 3;
 
-        _model.setPlayerAtPosition(currentPlayer, x, y);
-        _view.setCellImage(x, y);
-        setCurrentPlayer(0);
+            _model.setPlayerAtPosition(currentPlayer, x, y);
+            _view.setCellImage(x, y);
+            setCurrentPlayer(0);
+        }
     }
 
 
@@ -87,5 +81,21 @@ public class TTTController extends AbstractGame {
         currentPlayer = id == 0 ? player1 : player2;
         _view.setStatus(_model.getTurnMessage(currentPlayer));
     }
+
+    public boolean gameFinished(){
+        if (_model.hasWon(currentPlayer)) {
+            _view.setStatus("Player " + currentPlayer.getUsername() + " has won! Congratulations.");
+            _view.setIsFinished(true);
+            return true;
+        }
+        else if (_model.isFull()) {
+            _view.setStatus("Neither player has won. Too bad.");
+            _view.setIsFinished(true);
+            return true;
+        } else{
+            return false;
+        }
+    }
+
 
 }

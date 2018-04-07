@@ -141,9 +141,9 @@ public class TTTView {
                     }
                 });
             }
+            Platform.runLater(() -> _pane.add(imageView, x, y));
         });
 
-        Platform.runLater(() -> _pane.add(imageView, x, y));
     }
 
     public Button getNewGameButton() {
