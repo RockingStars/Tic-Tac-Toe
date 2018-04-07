@@ -4,6 +4,7 @@ import com.rockingstar.engine.game.Player;
 import com.rockingstar.engine.io.models.Util;
 import com.rockingstar.modules.TicTacToe.controllers.TTTController;
 
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -109,23 +110,27 @@ public class TTTView {
             Util.exit("Loading TicTacToe images");
         }
 
-        if (_board[x][y] == null) {
-            final int tempX = x;
-            final int tempY = y;
+        Platform.runLater(() -> {
+            if (_board[x][y] == null) {
+                final int tempX = x;
+                final int tempY = y;
 
-            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    if (!_isFinished) {
-                        imageView.setImage(null);
-                        _controller.doPlayerMove(tempX, tempY);
-                        imageView.removeEventFilter(MouseEvent.MOUSE_CLICKED, this);
+                imageView.setOnMousePressed(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        if (!_isFinished && !_controller.getIsYourTurn()) {
+                            imageView.setImage(null);
+                            _controller.doPlayerMove(tempX, tempY);
+                            imageView.removeEventFilter(MouseEvent.MOUSE_CLICKED, this);
+                        }
+                        else if (!_controller.getIsYourTurn())
+                            _status.setText("It's not your turn, buddy");
                     }
-                }
-            });
-        }
+                });
+            }
+        });
 
-        _pane.add(imageView, x, y);
+        Platform.runLater(() -> _pane.add(imageView, x, y));
     }
 
     public Button getNewGameButton() {
@@ -141,7 +146,7 @@ public class TTTView {
     }
 
     public void setStatus(String status) {
-        _status.setText(status);
+        Platform.runLater(() -> _status.setText(status));
     }
 
     public void setIsFinished(boolean isFinished) {

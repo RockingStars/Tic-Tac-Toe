@@ -43,27 +43,27 @@ public class TTTController extends AbstractGame {
     @Override
     public void doPlayerMove(int x, int y) {
         if (_model.isValidMove(x, y)) {
-            if (currentPlayer == player1) {
+            if (yourTurn) {
                 CommandExecutor.execute(new MoveCommand(ServerConnection.getInstance(), y * 3 + x));
-                // @todo Error handling
+                yourTurn = false;
             }
 
             _model.setPlayerAtPosition(currentPlayer, x, y);
             _view.setCellImage(x, y);
-
-            if (_model.hasWon(currentPlayer)) {
-                _view.setStatus("Player " + currentPlayer.getUsername() + " has won! Congratulations.");
-                _view.setIsFinished(true);
-                return;
-            }
-            else if (_model.isFull()) {
-                _view.setStatus("Neither player has won. Too bad.");
-                _view.setIsFinished(true);
-                return;
-            }
         }
         else
             _view.setStatus("Invalid move");
+
+        if (_model.hasWon(currentPlayer)) {
+            _view.setStatus("Player " + currentPlayer.getUsername() + " has won! Congratulations.");
+            _view.setIsFinished(true);
+            return;
+        }
+        else if (_model.isFull()) {
+            _view.setStatus("Neither player has won. Too bad.");
+            _view.setIsFinished(true);
+            return;
+        }
     }
 
     @Override
@@ -75,5 +75,9 @@ public class TTTController extends AbstractGame {
     public void setCurrentPlayer(String name) {
         currentPlayer = player1.getUsername().equals(name) ? player1 : player2;
         _view.setStatus(_model.getTurnMessage(currentPlayer));
+    }
+
+    public boolean getIsYourTurn() {
+        return yourTurn;
     }
 }
