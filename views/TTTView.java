@@ -141,7 +141,7 @@ public class TTTView {
                     }
                 });
             }
-            _pane.add(imageView, x, y));
+            _pane.add(imageView, x, y);
         });
 
     }

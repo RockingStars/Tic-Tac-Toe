@@ -55,8 +55,6 @@ public class TTTController extends AbstractGame {
             } else
                 _view.setErrorStatus("Invalid move");
         }
-<<<<<<< HEAD
-=======
 
         if (_model.isValidMove(x, y)) {
             if (yourTurn) {
@@ -87,7 +85,7 @@ public class TTTController extends AbstractGame {
             tempY = rand.nextInt(2 + 1);
         }
         doPlayerMove(tempX, tempY);
->>>>>>> 13b9002f26fcd28c9c160f8d71ed58f16f8fe876
+
     }
 
     @Override
