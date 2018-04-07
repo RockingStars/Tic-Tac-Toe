@@ -5,6 +5,7 @@ import com.rockingstar.engine.command.client.CommandExecutor;
 import com.rockingstar.engine.command.client.MoveCommand;
 import com.rockingstar.engine.game.AbstractGame;
 import com.rockingstar.engine.game.Player;
+import com.rockingstar.engine.game.State;
 import com.rockingstar.modules.TicTacToe.models.TTTModel;
 import com.rockingstar.modules.TicTacToe.views.TTTView;
 import javafx.application.Platform;
@@ -65,6 +66,7 @@ public class TTTController extends AbstractGame {
             randomGenerator();
         }*/
     }
+
     public void randomGenerator() {
         Random rand = new Random();
         int tempX = 3;
@@ -92,20 +94,23 @@ public class TTTController extends AbstractGame {
         }
     }
 
-
     public boolean getIsYourTurn() {
         return yourTurn;
     }
 
     @Override
     public void setCurrentPlayer(int id) {
+        if (currentState == State.GAME_FINISHED)
+            return;
+
         currentPlayer = id == 0 ? player1 : player2;
         _view.setStatus(_model.getTurnMessage(currentPlayer));
     }
 
     public boolean gameFinished(){
-        if (_model.hasWon(currentPlayer)) {
-            _view.setStatus("Player " + currentPlayer.getUsername() + " has won! Congratulations.");
+        if (_model.hasWon(player1) || _model.hasWon(player2)) {
+            _view.setStatus("Player " + (yourTurn ? player1 : player2).getUsername() + " has won! Congratulations.");
+            setGameState(State.GAME_FINISHED);
             _view.setIsFinished(true);
             return true;
         }
@@ -120,10 +125,12 @@ public class TTTController extends AbstractGame {
         super.gameEnded();
         _view.setIsFinished(true);
         if(!_model.isFull()) {
-            _view.setStatus("Player " + currentPlayer.getUsername() + " has won! Congratulations.");
+            _view.setStatus("Player " + (yourTurn ? player1 : player2).getUsername() + " has won! Congratulations.");
         } else {
             _view.setStatus("It's a draw! N00bs");
         }
+
+        setGameState(State.GAME_FINISHED);
 
         Platform.runLater(() -> {
             Alert returnToLobby = new Alert(Alert.AlertType.CONFIRMATION);
@@ -134,11 +141,8 @@ public class TTTController extends AbstractGame {
             returnToLobby.showAndWait();
 
             if (returnToLobby.getResult() == ButtonType.OK) {
-                System.out.println("go to lobby....");
+                toLobby();
             }
         });
-
     }
-
-
 }
