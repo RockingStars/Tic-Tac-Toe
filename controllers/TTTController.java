@@ -8,6 +8,7 @@ import com.rockingstar.engine.game.Player;
 import com.rockingstar.modules.TicTacToe.models.TTTModel;
 import com.rockingstar.modules.TicTacToe.views.TTTView;
 import javafx.scene.Node;
+import java.util.Random;
 
 public class TTTController extends AbstractGame {
 
@@ -64,9 +65,22 @@ public class TTTController extends AbstractGame {
 
             switchPlayers();
             _view.setStatus(_model.getTurnMessage(currentPlayer));
-        }
-        else
+        } else {
             _view.setStatus("Invalid move");
+        }
+        if (currentPlayer == player2) {
+            randomGenerator();
+        }
+    }
+    public void randomGenerator() {
+        Random rand = new Random();
+        int tempX = 3;
+        int tempY = 3;
+        while (!_model.isValidMove(tempX, tempY)) {
+            tempX = rand.nextInt(2 + 1);
+            tempY = rand.nextInt(2 + 1);
+        }
+        doPlayerMove(tempX, tempY);
     }
 
     @Override
