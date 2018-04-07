@@ -8,6 +8,7 @@ import com.rockingstar.engine.game.Player;
 import com.rockingstar.modules.TicTacToe.models.TTTModel;
 import com.rockingstar.modules.TicTacToe.views.TTTView;
 import javafx.scene.Node;
+import java.util.Random;
 
 public class TTTController extends AbstractGame {
 
@@ -54,6 +55,39 @@ public class TTTController extends AbstractGame {
             } else
                 _view.setErrorStatus("Invalid move");
         }
+<<<<<<< HEAD
+=======
+
+        if (_model.isValidMove(x, y)) {
+            if (yourTurn) {
+                CommandExecutor.execute(new MoveCommand(ServerConnection.getInstance(), y * 3 + x));
+                _model.setPlayerAtPosition(currentPlayer, x, y);
+                _view.setCellImage(x, y);
+                yourTurn = false;
+                setCurrentPlayer(1);
+            }
+            else {
+                _view.setErrorStatus("It's not your turn");
+            }
+
+        }
+        else
+            _view.setErrorStatus("Invalid move");
+
+        if (currentPlayer == player2) {
+            randomGenerator();
+        }
+    }
+    public void randomGenerator() {
+        Random rand = new Random();
+        int tempX = 3;
+        int tempY = 3;
+        while (!_model.isValidMove(tempX, tempY)) {
+            tempX = rand.nextInt(2 + 1);
+            tempY = rand.nextInt(2 + 1);
+        }
+        doPlayerMove(tempX, tempY);
+>>>>>>> 13b9002f26fcd28c9c160f8d71ed58f16f8fe876
     }
 
     @Override

@@ -141,7 +141,7 @@ public class TTTView {
                     }
                 });
             }
-            Platform.runLater(() -> _pane.add(imageView, x, y));
+            _pane.add(imageView, x, y));
         });
 
     }
