@@ -68,7 +68,9 @@ public class TTTController extends AbstractGame {
         } else {
             _view.setStatus("Invalid move");
         }
-        randomGenerator();
+        if (currentPlayer == player2) {
+            randomGenerator();
+        }
     }
     public void randomGenerator() {
         Random rand = new Random();
