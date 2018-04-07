@@ -1,7 +1,10 @@
 package com.rockingstar.modules.TicTacToe.controllers;
 
+import com.rockingstar.engine.ServerConnection;
+import com.rockingstar.engine.command.client.CommandExecutor;
+import com.rockingstar.engine.command.client.MoveCommand;
 import com.rockingstar.engine.game.AbstractGame;
-import com.rockingstar.engine.game.models.Player;
+import com.rockingstar.engine.game.Player;
 import com.rockingstar.modules.TicTacToe.models.TTTModel;
 import com.rockingstar.modules.TicTacToe.views.TTTView;
 import javafx.scene.Node;
@@ -17,8 +20,8 @@ public class TTTController extends AbstractGame {
     public TTTController(Player player1, Player player2) {
         super(player1, player2);
 
-        player1.setCharacter('x');
-        player2.setCharacter('o');
+        this.player1.setCharacter('x');
+        this.player2.setCharacter('o');
 
         _view = new TTTView(this);
         _model = new TTTModel(_view);
@@ -41,6 +44,11 @@ public class TTTController extends AbstractGame {
     @Override
     public void doPlayerMove(int x, int y) {
         if (_model.isValidMove(x, y)) {
+            if (currentPlayer == player1) {
+                CommandExecutor.execute(new MoveCommand(ServerConnection.getInstance(), x * y));
+                // @todo Error handling
+            }
+
             _model.setPlayerAtPosition(currentPlayer, x, y);
             _view.setCellImage(x, y);
 
@@ -71,5 +79,10 @@ public class TTTController extends AbstractGame {
             tempY = rand.nextInt(2 + 1);
         }
         doPlayerMove(tempX, tempY);
+    }
+
+    @Override
+    public void doPlayerMove(int position) {
+        doPlayerMove(position / 3, position % 3);
     }
 }
