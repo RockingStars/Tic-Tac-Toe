@@ -118,7 +118,7 @@ public class TTTView {
                 imageView.setOnMousePressed(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        if (!_isFinished && !_controller.getIsYourTurn()) {
+                        if (!_isFinished && _controller.getIsYourTurn()) {
                             imageView.setImage(null);
                             _controller.doPlayerMove(tempX, tempY);
                             imageView.removeEventFilter(MouseEvent.MOUSE_CLICKED, this);

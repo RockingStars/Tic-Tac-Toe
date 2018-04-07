@@ -71,11 +71,6 @@ public class TTTController extends AbstractGame {
         doPlayerMove(position / 3, position % 3);
     }
 
-    @Override
-    public void setCurrentPlayer(String name) {
-        currentPlayer = player1.getUsername().equals(name) ? player1 : player2;
-        _view.setStatus(_model.getTurnMessage(currentPlayer));
-    }
 
     public boolean getIsYourTurn() {
         return yourTurn;
