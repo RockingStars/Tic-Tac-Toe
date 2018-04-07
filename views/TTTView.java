@@ -3,7 +3,7 @@ package com.rockingstar.modules.TicTacToe.views;
 import com.rockingstar.engine.game.Player;
 import com.rockingstar.engine.io.models.Util;
 import com.rockingstar.modules.TicTacToe.controllers.TTTController;
-
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.net.URISyntaxException;
@@ -33,10 +34,12 @@ public class TTTView {
     private HBox _buttons;
 
     private Label _status;
+    private Label _errorStatus;
 
     private TTTController _controller;
 
     private boolean _isFinished;
+    private HBox _labels;
 
     public TTTView(TTTController controller) {
         _borderPane = new BorderPane();
@@ -44,6 +47,11 @@ public class TTTView {
 
         _status = new Label();
         _status.setFont(new Font(16));
+
+        _errorStatus = new Label();
+        _errorStatus.setFont(new Font(16));
+        _errorStatus.setTextFill(Color.RED);
+
 
         _isFinished = false;
 
@@ -64,9 +72,15 @@ public class TTTView {
         _buttons.setAlignment(Pos.CENTER);
         _buttons.getChildren().addAll(_newGameButton, _endButton);
 
+        _labels = new HBox();
+        _labels.setSpacing(60.0);
+        _labels.setMinHeight(50);
+        _labels.setAlignment(Pos.CENTER);
+        _labels.getChildren().addAll(_status, _errorStatus);
+
         _borderPane.setCenter(_pane);
         _borderPane.setBottom(_buttons);
-        _borderPane.setTop(_status);
+        _borderPane.setTop(_labels);
     }
 
     public void generateBoardVisual() {
@@ -109,23 +123,27 @@ public class TTTView {
             Util.exit("Loading TicTacToe images");
         }
 
-        if (_board[x][y] == null) {
-            final int tempX = x;
-            final int tempY = y;
+        Platform.runLater(() -> {
+            if (_board[x][y] == null) {
+                final int tempX = x;
+                final int tempY = y;
 
-            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    if (!_isFinished) {
-                        imageView.setImage(null);
-                        _controller.doPlayerMove(tempX, tempY);
-                        imageView.removeEventFilter(MouseEvent.MOUSE_CLICKED, this);
+                imageView.setOnMousePressed(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        if (!_isFinished && _controller.getIsYourTurn()) {
+                            imageView.setImage(null);
+                            _controller.doPlayerMove(tempX, tempY);
+                            imageView.removeEventFilter(MouseEvent.MOUSE_CLICKED, this);
+                        }
+                        else if (!_controller.getIsYourTurn())
+                            _errorStatus.setText("It's not your turn, buddy");
                     }
-                }
-            });
-        }
+                });
+            }
+        });
 
-        _pane.add(imageView, x, y);
+        Platform.runLater(() -> _pane.add(imageView, x, y));
     }
 
     public Button getNewGameButton() {
@@ -141,7 +159,11 @@ public class TTTView {
     }
 
     public void setStatus(String status) {
-        _status.setText(status);
+        Platform.runLater(() -> _status.setText(status));
+    }
+
+    public void setErrorStatus(String errorStatus) {
+        Platform.runLater(() -> _errorStatus.setText(errorStatus));
     }
 
     public void setIsFinished(boolean isFinished) {
