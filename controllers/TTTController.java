@@ -20,8 +20,6 @@ public class TTTController extends AbstractGame {
     private TTTModel _model;
     private TTTView _view;
 
-    private Player[][] _board;
-
     public TTTController(Player player1, Player player2) {
         super(player1, player2);
 
@@ -31,7 +29,6 @@ public class TTTController extends AbstractGame {
         _view = new TTTView(this);
         _model = new TTTModel(_view);
 
-        _board = _model.getBoard();
         _model.addEventHandlers();
         _model.createCells();
 
@@ -92,10 +89,6 @@ public class TTTController extends AbstractGame {
             _view.setCellImage(x, y);
             setCurrentPlayer(0);
         }
-    }
-
-    public boolean getIsYourTurn() {
-        return yourTurn;
     }
 
     @Override
