@@ -23,6 +23,8 @@ public class TTTController extends AbstractGame {
     public TTTController(Player player1, Player player2) {
         super(player1, player2);
 
+        startGame();
+
         this.player1.setCharacter('x');
         this.player2.setCharacter('o');
 
@@ -98,6 +100,11 @@ public class TTTController extends AbstractGame {
 
         currentPlayer = id == 0 ? player1 : player2;
         _view.setStatus(_model.getTurnMessage(currentPlayer));
+    }
+
+    @Override
+    public void showPossibleMoves() {
+        return;
     }
 
     public boolean gameFinished(){
