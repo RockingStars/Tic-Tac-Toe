@@ -60,8 +60,6 @@ public class TTTController extends AbstractGame {
             else
                 _view.setErrorStatus("Invalid move");
         }
-        else
-            gameEnded();
 
         /*if (currentPlayer == player2) {
             randomGenerator();
@@ -120,8 +118,9 @@ public class TTTController extends AbstractGame {
         return _model.isFull();
     }
 
-    public void gameEnded() {
-        super.gameEnded();
+    @Override
+    public void gameEnded(String result) {
+        super.gameEnded(result);
         _view.setIsFinished(true);
 
         if(!_model.isFull())
