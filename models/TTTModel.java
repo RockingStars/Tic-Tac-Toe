@@ -6,7 +6,7 @@ import javafx.application.Platform;
 
 public class TTTModel {
 
-    public Player[][] _board = new Player[3][3];
+    private Player[][] _board = new Player[3][3];
 
     private TTTView _view;
 
@@ -19,7 +19,7 @@ public class TTTModel {
         _view.getNewGameButton().setOnAction(e -> clearBoard());
     }
 
-    public void clearBoard() {
+    private void clearBoard() {
         _board = new Player[3][3];
         createCells();
 
@@ -86,9 +86,5 @@ public class TTTModel {
                     return false;
 
         return true;
-    }
-
-    public String getTurnMessage(Player player) {
-        return player.getUsername() + ", it's your turn";
     }
 }

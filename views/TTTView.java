@@ -47,6 +47,7 @@ public class TTTView {
 
         _status = new Label();
         _status.setFont(new Font(16));
+        _status.setId("topText");
 
         _errorStatus = new Label();
         _errorStatus.setFont(new Font(16));
@@ -141,9 +142,9 @@ public class TTTView {
                     }
                 });
             }
+
             _pane.add(imageView, x, y);
         });
-
     }
 
     public Button getNewGameButton() {
