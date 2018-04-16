@@ -1,8 +1,31 @@
+/*
+ * Enjun
+ *
+ * @version     1.0 Beta 1
+ * @author      Rocking Stars
+ * @copyright   2018, Enjun
+ *
+ * Copyright 2018 RockingStars
+
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.rockingstar.modules.TicTacToe.views;
 
 import com.rockingstar.engine.game.Player;
 import com.rockingstar.engine.io.models.Util;
 import com.rockingstar.modules.TicTacToe.controllers.TTTController;
+
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -21,26 +44,62 @@ import javafx.scene.text.Font;
 
 import java.net.URISyntaxException;
 
+/**
+ * This class handles the graphical part of the TicTacToe game.
+ * @author Rocking Stars
+ * @since 1.0 Beta 1
+ */
 public class TTTView {
 
+    /**
+     * Contains the status bars and the game board
+     */
     private BorderPane _borderPane;
 
+    /**
+     * A button that ends the game
+     */
     private Button _endButton;
+
+    /**
+     * A button that lets you start a new game
+     */
     private Button _newGameButton;
 
+    /**
+     * Contains the player images
+     */
     private GridPane _pane;
 
+    /**
+     * The game board
+     */
     private Player[][] _board;
-    private HBox _buttons;
 
+    /**
+     * The current status
+     */
     private Label _status;
+
+    /**
+     * Used for displaying errors, such as 'Not your turn'
+     */
     private Label _errorStatus;
 
+    /**
+     * Points to the TTTController
+     */
     private TTTController _controller;
 
+    /**
+     * Whether or not the game is finished
+     */
     private boolean _isFinished;
-    private HBox _labels;
 
+    /**
+     * TTTView constructor
+     * @param controller The TicTacToe controller
+     */
     public TTTView(TTTController controller) {
         _borderPane = new BorderPane();
         _controller = controller;
@@ -53,12 +112,14 @@ public class TTTView {
         _errorStatus.setFont(new Font(16));
         _errorStatus.setTextFill(Color.RED);
 
-
         _isFinished = false;
 
         setup();
     }
 
+    /**
+     * Sets up the view
+     */
     private void setup() {
         _endButton = new Button("End game");
         _newGameButton = new Button("New game");
@@ -67,23 +128,26 @@ public class TTTView {
         _pane.setAlignment(Pos.CENTER);
         _pane.setPadding(new Insets(20));
 
-        _buttons = new HBox();
-        _buttons.setSpacing(60.0);
-        _buttons.setMinHeight(50);
-        _buttons.setAlignment(Pos.CENTER);
-        _buttons.getChildren().addAll(_newGameButton, _endButton);
+        HBox buttons = new HBox();
+        buttons.setSpacing(60.0);
+        buttons.setMinHeight(50);
+        buttons.setAlignment(Pos.CENTER);
+        buttons.getChildren().addAll(_newGameButton, _endButton);
 
-        _labels = new HBox();
-        _labels.setSpacing(60.0);
-        _labels.setMinHeight(50);
-        _labels.setAlignment(Pos.CENTER);
-        _labels.getChildren().addAll(_status, _errorStatus);
+        HBox labels = new HBox();
+        labels.setSpacing(60.0);
+        labels.setMinHeight(50);
+        labels.setAlignment(Pos.CENTER);
+        labels.getChildren().addAll(_status, _errorStatus);
 
         _borderPane.setCenter(_pane);
-        _borderPane.setBottom(_buttons);
-        _borderPane.setTop(_labels);
+        _borderPane.setBottom(buttons);
+        _borderPane.setTop(labels);
     }
 
+    /**
+     * Displays an appropriate image for each cell
+     */
     public void generateBoardVisual() {
         _pane.getChildren().clear();
 
@@ -92,10 +156,19 @@ public class TTTView {
                 setCellImage(i, j);
     }
 
+    /**
+     * Returns a pointer to _endButton
+     * @return _endButton
+     */
     public Button getEndButton() {
         return _endButton;
     }
 
+    /**
+     * Updates the image of a specific cell
+     * @param x The x position
+     * @param y The y position
+     */
     public void setCellImage(int x, int y) {
         String fileName;
         ImageView imageView = new ImageView();
@@ -147,26 +220,50 @@ public class TTTView {
         });
     }
 
+    /**
+     * Returns the new game button
+     * @return _newGameButton
+     */
     public Button getNewGameButton() {
         return _newGameButton;
     }
 
+    /**
+     * Returns the view
+     * @return A BordePane containing status bars and the game board
+     */
     public Node getNode() {
         return _borderPane;
     }
 
+    /**
+     * Sets the game board
+     * @param board The game board
+     */
     public void setBoard(Player[][] board) {
         _board = board;
     }
 
+    /**
+     * Updates the status label
+     * @param status The new status
+     */
     public void setStatus(String status) {
         Platform.runLater(() -> _status.setText(status));
     }
 
+    /**
+     * Updates the error status
+     * @param errorStatus The new error status
+     */
     public void setErrorStatus(String errorStatus) {
         Platform.runLater(() -> _errorStatus.setText(errorStatus));
     }
 
+    /**
+     * Sets the value of _isFinished
+     * @param isFinished The new value of _isFinished
+     */
     public void setIsFinished(boolean isFinished) {
         _isFinished = isFinished;
     }
