@@ -25,6 +25,8 @@ package com.rockingstar.modules.TicTacToe.models;
 import com.rockingstar.engine.game.Player;
 import com.rockingstar.modules.TicTacToe.views.TTTView;
 
+import java.util.ArrayList;
+
 /**
  * This class contains algorithmic methods, used for determining things like if there is a winner,
  * checking if a move is valid and clearing the board.
@@ -37,6 +39,7 @@ public class TTTModel {
      * The game board, made up of player objects.
      */
     private Player[][] _board = new Player[3][3];
+    private Player _ghost;
 
     /**
      * The TicTacToe view
@@ -49,6 +52,7 @@ public class TTTModel {
      */
     public TTTModel(TTTView view) {
         _view = view;
+        _ghost = new Player("PossibleMoves", null, 'p');
     }
 
     /**
@@ -121,6 +125,24 @@ public class TTTModel {
             return true;
 
         return _board[0][2] == player && _board[1][1] == player && _board[2][0] == player;
+    }
+
+    /**
+     * Returns an arraylist of possible moves
+     * @return Possible moves
+     */
+    public ArrayList<Integer> getPossibleMoves() {
+        ArrayList<Integer> possibleMoves = new ArrayList<>();
+        for(int i = 0; i < _board.length; i++){
+            for(int j = 0; j < _board.length; j++){
+                if (isValidMove(i, j)) {
+                    possibleMoves.add(j * 3 + i);
+                    //System.out.printf("Move from player %s\n", player.getUsername());
+                }
+            }
+        }
+
+        return possibleMoves;
     }
 
     /**
