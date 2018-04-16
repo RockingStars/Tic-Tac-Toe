@@ -4,14 +4,18 @@ import com.rockingstar.engine.game.Player;
 import com.rockingstar.modules.TicTacToe.views.TTTView;
 import javafx.application.Platform;
 
+import java.util.ArrayList;
+
 public class TTTModel {
 
     private Player[][] _board = new Player[3][3];
+    private Player _ghost;
 
     private TTTView _view;
 
     public TTTModel(TTTView view) {
         _view = view;
+        _ghost = new Player("PossibleMoves", null, 'p');
     }
 
     public void addEventHandlers() {
@@ -78,6 +82,21 @@ public class TTTModel {
 
         return false;
     }
+
+    public ArrayList<Integer> getPossibleMoves() {
+        ArrayList<Integer> possibleMoves = new ArrayList<>();
+        for(int i = 0; i < _board.length; i++){
+            for(int j = 0; j < _board.length; j++){
+                if (isValidMove(i, j)) {
+                    possibleMoves.add(j * 3 + i);
+                    //System.out.printf("Move from player %s\n", player.getUsername());
+                }
+            }
+        }
+
+        return possibleMoves;
+    }
+
 
     public boolean isFull() {
         for (int i = 0; i < 3; i++)

@@ -3,9 +3,12 @@ package com.rockingstar.modules.TicTacToe.controllers;
 import com.rockingstar.engine.ServerConnection;
 import com.rockingstar.engine.command.client.CommandExecutor;
 import com.rockingstar.engine.command.client.MoveCommand;
+import com.rockingstar.engine.game.AI;
 import com.rockingstar.engine.game.AbstractGame;
 import com.rockingstar.engine.game.Player;
 import com.rockingstar.engine.game.State;
+import com.rockingstar.engine.game.models.VectorXY;
+import com.rockingstar.engine.io.models.Util;
 import com.rockingstar.modules.TicTacToe.models.TTTModel;
 import com.rockingstar.modules.TicTacToe.views.TTTView;
 import javafx.application.Platform;
@@ -13,6 +16,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class TTTController extends AbstractGame {
@@ -46,13 +50,13 @@ public class TTTController extends AbstractGame {
         if (!gameFinished()) {
             if (_model.isValidMove(x, y)) {
                 if (yourTurn) {
-                    CommandExecutor.execute(new MoveCommand(ServerConnection.getInstance(), y * 3 + x));
 
                     _model.setPlayerAtPosition(player1, x, y);
                     _view.setCellImage(x, y);
+                    CommandExecutor.execute(new MoveCommand(ServerConnection.getInstance(), y * 3 + x));
 
                     _view.setStatus("Opponent's turn");
-                    yourTurn = false;
+//                    yourTurn = false;
                 }
                 else
                     _view.setErrorStatus("It's not your turn");
@@ -60,17 +64,15 @@ public class TTTController extends AbstractGame {
             else
                 _view.setErrorStatus("Invalid move");
         }
-
-        /*if (currentPlayer == player2) {
-            randomGenerator();
-        }*/
     }
 
     @Override
     public void doPlayerMove(int position) {
         if (!gameFinished()) {
-            if (yourTurn)
+            if (yourTurn) {
+                yourTurn = false;
                 return;
+            }
 
             int x = position % 3;
             int y = position / 3;
@@ -82,27 +84,23 @@ public class TTTController extends AbstractGame {
         }
     }
 
-    public void randomGenerator() {
-        Random rand = new Random();
-
-        int tempX = 3;
-        int tempY = 3;
-
-        while (!_model.isValidMove(tempX, tempY)) {
-            tempX = rand.nextInt(2 + 1);
-            tempY = rand.nextInt(2 + 1);
-        }
-
-        doPlayerMove(tempX, tempY);
-    }
-
-    @Override
-    public void showPossibleMoves() {}
-
     @Override
     public void doYourTurn() {
         _view.setStatus("It's your turn!");
         yourTurn = true;
+
+        ArrayList<Integer> possibleMoves = _model.getPossibleMoves();
+
+        if (possibleMoves.size() == 0) {
+            setGameState(State.GAME_FINISHED);
+            Util.displayStatus("No possible moves.");
+            return;
+        }
+
+        if (player1 instanceof AI) {
+            VectorXY coordinates = ((AI) player1).getMove(player1, possibleMoves);
+            doPlayerMove(coordinates.x, coordinates.y);
+        }
     }
 
     private boolean gameFinished() {
