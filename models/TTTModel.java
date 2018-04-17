@@ -137,7 +137,6 @@ public class TTTModel {
             for(int j = 0; j < _board.length; j++){
                 if (isValidMove(i, j)) {
                     possibleMoves.add(j * 3 + i);
-                    //System.out.printf("Move from player %s\n", player.getUsername());
                 }
             }
         }

@@ -39,14 +39,12 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * This class sets up Tic Tac Toe.
  * @author Rocking Stars
  * @since 1.0 Beta 1
  */
-
 public class TTTController extends AbstractGame {
 
     /**
